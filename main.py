@@ -1,6 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Query, status, Body, Header
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Depends
 from typing import Annotated
 import openai
 import time
@@ -9,8 +7,13 @@ from pydantic import BaseModel
 from functions.stock import get_stock_price
 from functions.create_thread import create_thread
 import json
+import os
+from dotenv import load_dotenv
 
-api_key = "sk-bwq6F1VjDiipTnAmSjNQbQ5w7fhl9TGhUZpejYOiLNT3BlbkFJ2yhicBsobmXIa-jWus2TAVBrr52D9YxojRyuKAv4cA"
+load_dotenv()
+
+
+api_key = os.getenv("OPENAI_API_KEY")
 
 client = openai.OpenAI(api_key=api_key)
 app: FastAPI = FastAPI()
