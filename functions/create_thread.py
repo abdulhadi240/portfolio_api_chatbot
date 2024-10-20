@@ -1,6 +1,11 @@
 import openai
+import os
+from dotenv import load_dotenv
 
-api_key = "sk-bwq6F1VjDiipTnAmSjNQbQ5w7fhl9TGhUZpejYOiLNT3BlbkFJ2yhicBsobmXIa-jWus2TAVBrr52D9YxojRyuKAv4cA" 
+load_dotenv()
+
+
+api_key = os.getenv("OPENAI_API_KEY")
 
 client = openai.OpenAI(api_key=api_key)
 
