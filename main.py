@@ -9,6 +9,7 @@ from functions.create_thread import create_thread
 import json
 import os
 from dotenv import load_dotenv
+from functions.get_menu_items import get_menu_items
 
 load_dotenv()
 
@@ -18,7 +19,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=api_key)
 app: FastAPI = FastAPI()
 
-assistant_id = "asst_mwL7IYsHAm70g6JAEGwBdDtO"
+assistant_id = "asst_DyEVGMGNaMqPUfdnwQ6KUiAY"
 
 class Chat(BaseModel):
     thread: str
@@ -29,18 +30,9 @@ def create_assistant():
     tools_object = {
         "type": "function",
         "function": {
-            "name": "get_stock_price",
-            "description": "Retrieve the latest closing price of a stock using its ticker symbol",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "symbol": {
-                        "type": "string",
-                        "description": "The ticker symbol of the stock"
-                    }
-                },
-                "required": ["symbol"]
-            }
+            "name": "get_menu_items",
+            "description": "Retrieve all the menu items listed",
+            "parameters": {}
         }
     }
 
@@ -108,8 +100,8 @@ def chat_with_assistant(chat_request: Chat):
                 arguments = json.loads(action['function']['arguments'])
 
                 # Example function call handling (expand based on your needs)
-                if func_name == "get_stock_price":
-                    output = get_stock_price(symbol=arguments['symbol'])
+                if func_name == "get_menu_items":
+                    output = get_menu_items()
                     tool_outputs.append({
                         "tool_call_id": action['id'],
                         "output": str(output)
