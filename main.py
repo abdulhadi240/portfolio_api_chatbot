@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 from functions.get_menu_items import get_menu_items
 from functions.create_customers import create_new_customers
+from functions.get_orders_details import get_order_details
 load_dotenv()
 
 
@@ -33,6 +34,14 @@ def create_assistant():
             "function": {
                 "name": "get_menu_items",
                 "description": "Retrieve all the menu items listed",
+                "parameters": {}
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_order_details",
+                "description": "Retrieve all the orders from the database",
                 "parameters": {}
             }
         },
@@ -159,6 +168,13 @@ def chat_with_assistant(chat_request: Chat):
                         "tool_call_id": action['id'],
                         "output": str(output)
                     })
+                elif    func_name == "get_orders_details":
+                        output = get_order_details()
+                        tool_outputs.append({
+                            "tool_call_id": action['id'],
+                            "output": str(output)
+                        })
+                   
 
             # Submit tool outputs back to the assistant
             client.beta.threads.runs.submit_tool_outputs(
