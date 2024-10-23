@@ -10,7 +10,7 @@ import json
 import os
 from dotenv import load_dotenv
 from functions.get_menu_items import get_menu_items
-
+from functions.create_customers import create_new_customers
 load_dotenv()
 
 
@@ -27,14 +27,57 @@ class Chat(BaseModel):
 
 @app.get('/assistant')
 def create_assistant():
-    tools_object = {
-        "type": "function",
-        "function": {
-            "name": "get_menu_items",
-            "description": "Retrieve all the menu items listed",
-            "parameters": {}
+    tools_object = [
+        {
+            "type": "function",
+            "function": {
+                "name": "get_menu_items",
+                "description": "Retrieve all the menu items listed",
+                "parameters": {}
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "create_new_customers",
+                "description": "Creates new customers in the database",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "firstname": {
+                            "type": "string",
+                            "description": "The firstname of the customer"
+                        }
+                    },
+                    "properties": {
+                        "lastname": {
+                            "type": "string",
+                            "description": "The lastname of the customer"
+                        }
+                    },
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "description": "The email of the customer"
+                        }
+                    },
+                    "properties": {
+                        "phonenumber": {
+                            "type": "string",
+                            "description": "The phonenumber of the customer"
+                        }
+                    },
+                    "properties": {
+                        "date": {
+                            "type": "string",
+                            "description": "The current date"
+                        }
+                    },
+                    "required": ["firstname","lastname","email","phonenumber","date"]
+                }
+            }
         }
-    }
+    ]
 
     assistant = client.beta.assistants.create(
         name="Stock Assistant",
@@ -102,6 +145,16 @@ def chat_with_assistant(chat_request: Chat):
                 # Example function call handling (expand based on your needs)
                 if func_name == "get_menu_items":
                     output = get_menu_items()
+                    tool_outputs.append({
+                        "tool_call_id": action['id'],
+                        "output": str(output)
+                    })
+                elif func_name == "create_new_customers":
+                    output = create_new_customers(firstname=arguments['firstname'],
+                                                  lastname=arguments['lastname'],
+                                                  email=arguments['email'],
+                                                  phonenumber=arguments['phonenumber'],
+                                                  date=arguments['date'])
                     tool_outputs.append({
                         "tool_call_id": action['id'],
                         "output": str(output)
