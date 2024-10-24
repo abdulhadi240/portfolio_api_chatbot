@@ -21,7 +21,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=api_key)
 app: FastAPI = FastAPI()
 
-assistant_id = "asst_DyEVGMGNaMqPUfdnwQ6KUiAY"
+assistant_id = "asst_8EnQmmGy0SRkRSWWpQ4X58kA"
 
 class Chat(BaseModel):
     thread: str
@@ -30,61 +30,87 @@ class Chat(BaseModel):
 @app.get('/assistant')
 def create_assistant():
     tools_object = [
-        {
-            "type": "function",
-            "function": {
-                "name": "get_menu_items",
-                "description": "Get all menu details. Call this whenever you need to know the menu related data",
-                "parameters": {}
-            }
-        },
-        {
-            "type": "function",
-            "function": {
-                "name": "get_order_details",
-                "description": "Get all orders details. Call this whenever you need to know the order related data",
-                "parameters": {}
-            }
-        },
-        {
-            "type": "function",
-            "function": {
-                "name": "create_new_customers",
-                "description": "Creates new customer",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "firstname": {
-                            "type": "string",
-                            "description": "The firstname of the customer"
-                        },
-                        "lastname": {
-                            "type": "string",
-                            "description": "The lastname of the customer"
-                        },
-                        "email": {
-                            "type": "string",
-                            "description": "The email of the customer"
-                        },
-                        "phonenumber": {
-                            "type": "string",
-                            "description": "The phonenumber of the customer"
-                        },
-                        "date": {
-                            "type": "string",
-                            "description": "The current date"
-                        }
-                    },
-
-
-                    "required": ["firstname","lastname","email","phonenumber","date"],
-                     
-                }
-            }
-           
+    {
+        "type": "function",
+        "function": {
+            "name": "get_menu_items",
+            "description": "Get all menu details. Call this whenever you need to know the menu related data",
+            "parameters": {}
         }
-         
-    ]
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_order_details",
+            "description": "Get all orders details. Call this whenever you need to know the order related data",
+            "parameters": {}
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "create_new_customers",
+            "description": "Creates new account for the customer",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "firstname": {
+                        "type": "string",
+                        "description": "The firstname of the customer"
+                    },
+                    "lastname": {
+                        "type": "string",
+                        "description": "The lastname of the customer"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "The email of the customer"
+                    },
+                    "phonenumber": {
+                        "type": "string",
+                        "description": "The phonenumber of the customer"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "The current date"
+                    }
+                },
+                "required": ["firstname", "lastname", "email", "phonenumber", "date"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "create_new_complain",
+            "description": "Creates a new complaint for the customer . When customer asked to file a complain",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "firstname": {
+                        "type": "string",
+                        "description": "The firstname of the customer making the complaint"
+                    },
+                    
+                    "email": {
+                        "type": "string",
+                        "description": "The email of the customer"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "The date of the complaint"
+                    },
+                    "complain": {
+                        "type": "string",
+                        "description": "The text of the complaint"
+                    }
+                },
+                "required": ["firstname", "email", "date", "complain"]
+            }
+        }
+    }
+]
+
 
     assistant = client.beta.assistants.create(
         name="Resturant Customer Service",
@@ -278,10 +304,9 @@ def chat_with_assistant(chat_request: Chat):
                 elif func_name == "create_new_complain":
                         output = create_new_complain(
                             arguments['firstname'],
-                            arguments['lastname'],
                             arguments['email'],
-                            arguments['phonenumber'],
                             arguments['date'],
+                            arguments['complain'],
                         )
                         tool_outputs.append({
                             "tool_call_id": action['id'],

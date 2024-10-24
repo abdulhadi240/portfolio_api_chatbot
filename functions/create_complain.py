@@ -1,7 +1,7 @@
 import requests
 
 def create_new_complain(firstname, email, date , complain):
-    url = "https://fake-menu.onrender.com/create_costumers"
+    url = "https://fake-menu.onrender.com/create_complain"
 
     customer_data = {
         "firstname": firstname,
@@ -18,3 +18,7 @@ def create_new_complain(firstname, email, date , complain):
         return f"HTTP error: {err}"
     except Exception as e:
         return f"Error: {str(e)}"
+    
+    
+    
+print(create_new_complain("Abdul Hadi", "ah912425@gmail.com", "2024-04-01", "This is a test complain."))
