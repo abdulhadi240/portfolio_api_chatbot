@@ -81,34 +81,43 @@ def create_assistant():
         }
     },
     {
-        "type": "function",
-        "function": {
-            "name": "create_new_order",
-            "description": "Creates a new order for customer . If cusotmer doesnot exist then first create a new customer then take orders",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "The email of the customer"
-                    },
-                    "menuid": {
-                        "type": "string",
-                        "description": "Customer will only give the name of the item you have to find the menu id by yourself through tools"
-                    },
-                    "quantity": {
-                        "type": "string",
-                        "description": "How much quantity the customer wants to order"
-                    },
-                    "date": {
-                        "type": "string",
-                        "description": "The current date"
-                    }
+    "type": "function",
+    "function": {
+        "name": "create_new_order",
+        "description": "Creates a new order for customer . If customer does not exist then first create a new customer then take orders",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "description": "The email of the customer"
                 },
-                "required": ["email", "menuid", "quantity", "date"]
-            }
+                "menuid": {
+                    "type": "string",
+                    "description": "Customer will only give the name of the item you have to find the menu id by yourself through tools"
+                },
+                "quantity": {
+                    "type": "string",
+                    "description": "How much quantity the customer wants to order"
+                },
+                "address": {
+                    "type": "string",
+                    "description": "The address of the customer . ASK customer for it"
+                },
+                "instruction": {
+                    "type": "string",
+                    "description": "Special instruction given by the customer"
+                },
+                "date": {
+                    "type": "string",
+                    "description": "The current date . Don't ask customer for it."
+                }
+            },
+            "required": ["email", "menuid", "quantity", "address", "instruction", "date"]
+        }
         }
     },
+
     {
         "type": "function",
         "function": {
@@ -347,7 +356,10 @@ def chat_with_assistant(chat_request: Chat):
                             arguments['email'],
                             arguments['menuid'],
                             arguments['quantity'],
-                            arguments['date'],
+                            arguments['address'],
+                            arguments['instruction'],
+                            arguments['date']
+                            
                         )
                         tool_outputs.append({
                             "tool_call_id": action['id'],

@@ -1,12 +1,14 @@
 import requests
 
-def create_new_order(email, menuid, quantity , date):
+def create_new_order(email, menuid, quantity, address , instruction, status, date):
     url = "https://fake-menu.onrender.com/create_order"
 
     order_details = {
         "email": email,
         "menuid": menuid,
         "quantity": quantity,
+        "address": address,
+        "instruction": instruction,
         "status": 'Placed',
         "date": date
         }
