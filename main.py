@@ -22,7 +22,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=api_key)
 app: FastAPI = FastAPI()
 
-assistant_id = "asst_8EnQmmGy0SRkRSWWpQ4X58kA"
+assistant_id = "asst_eGjU66QIWvbpKO28hVEt3wNi"
 
 class Chat(BaseModel):
     thread: str
