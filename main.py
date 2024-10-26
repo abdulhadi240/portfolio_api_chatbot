@@ -13,6 +13,7 @@ from functions.get_menu_items import get_menu_items
 from functions.get_orders_details import get_order_details
 from functions.create_customer import create_new_customers
 from functions.create_complain import create_new_complain
+from functions.create_orders import create_new_order
 load_dotenv()
 
 
@@ -76,6 +77,35 @@ def create_assistant():
                     }
                 },
                 "required": ["firstname", "lastname", "email", "phonenumber", "date"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "create_new_order",
+            "description": "Creates a new order for customer . If cusotmer doesnot exist then first create a new customer then take orders",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "The email of the customer"
+                    },
+                    "menuid": {
+                        "type": "string",
+                        "description": "Customer will only give the name of the item you have to find the menu id by yourself through tools"
+                    },
+                    "quantity": {
+                        "type": "string",
+                        "description": "How much quantity the customer wants to order"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "The current date"
+                    }
+                },
+                "required": ["email", "menuid", "quantity", "date"]
             }
         }
     },
@@ -311,7 +341,19 @@ def chat_with_assistant(chat_request: Chat):
                         tool_outputs.append({
                             "tool_call_id": action['id'],
                             "output": str(output)
-                        })        
+                        })
+                elif func_name == "create_new_order":
+                        output = create_new_order(
+                            arguments['email'],
+                            arguments['menuid'],
+                            arguments['quantity'],
+                            arguments['date'],
+                        )
+                        tool_outputs.append({
+                            "tool_call_id": action['id'],
+                            "output": str(output)
+                        }) 
+                               
                 else:
                   raise ValueError(f"Unknown function: {func_name}")
                    
