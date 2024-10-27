@@ -22,7 +22,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=api_key)
 app: FastAPI = FastAPI()
 
-assistant_id = "asst_eGjU66QIWvbpKO28hVEt3wNi"
+assistant_id = "asst_UP9VdnyheKdljcP6Rin8pUxx"
 
 class Chat(BaseModel):
     thread: str
@@ -257,7 +257,7 @@ This SOP will be reviewed every 6 months to ensure all procedures remain relevan
 Feedback from clients and staff will be taken into account to make necessary adjustments to enhance operational efficiency and service quality.
 This SOP should be followed by all staff members to ensure that Laziz Catering delivers consistent, high-quality services that exceed client expectations.""",
         tools=tools_object,  # Pass tools as an object
-        model="gpt-4-turbo"
+        model="gpt-3.5-turbo"
     )
     return {"assistant_id": assistant.id}
 
