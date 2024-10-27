@@ -22,7 +22,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=api_key)
 app: FastAPI = FastAPI()
 
-assistant_id = "asst_UP9VdnyheKdljcP6Rin8pUxx"
+assistant_id = "asst_T3zdvY3z9ild1I1GM1LDavG4"
 
 class Chat(BaseModel):
     thread: str
@@ -31,123 +31,123 @@ class Chat(BaseModel):
 @app.get('/assistant')
 def create_assistant():
     tools_object = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_menu_items",
-            "description": "Get all menu details. Call this whenever you need to know the menu related data",
-            "parameters": {}
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_order_details",
-            "description": "Get all orders details. Call this whenever you need to know the order related data",
-            "parameters": {}
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "create_new_customers",
-            "description": "Creates new account for the customer",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "firstname": {
-                        "type": "string",
-                        "description": "The firstname of the customer"
-                    },
-                    "lastname": {
-                        "type": "string",
-                        "description": "The lastname of the customer"
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "The email of the customer"
-                    },
-                    "phonenumber": {
-                        "type": "string",
-                        "description": "The phonenumber of the customer"
-                    },
-                    "date": {
-                        "type": "string",
-                        "description": "The current date"
-                    }
-                },
-                "required": ["firstname", "lastname", "email", "phonenumber", "date"]
+        {
+            "type": "function",
+            "function": {
+                "name": "get_menu_items",
+                "description": "Get all menu details. Call this whenever you need to know the menu related data",
+                "parameters": {}
             }
-        }
-    },
-    {
-    "type": "function",
-    "function": {
-        "name": "create_new_order",
-        "description": "Creates a new order for customer . If customer does not exist then first create a new customer then take orders",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "description": "The email of the customer"
-                },
-                "menuid": {
-                    "type": "string",
-                    "description": "Customer will only give the name of the item you have to find the menu id by yourself through tools"
-                },
-                "quantity": {
-                    "type": "string",
-                    "description": "How much quantity the customer wants to order"
-                },
-                "address": {
-                    "type": "string",
-                    "description": "The address of the customer . ASK customer for it"
-                },
-                "instruction": {
-                    "type": "string",
-                    "description": "Special instruction given by the customer"
-                },
-                "date": {
-                    "type": "string",
-                    "description": "The current date . Don't ask customer for it."
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "get_order_details",
+                "description": "Get all orders details. Call this whenever you need to know the order related data",
+                "parameters": {}
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "create_new_customers",
+                "description": "Creates new order for the customer",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "firstname": {
+                            "type": "string",
+                            "description": "The firstname of the customer"
+                        },
+                        "lastname": {
+                            "type": "string",
+                            "description": "The lastname of the customer"
+                        },
+                        "email": {
+                            "type": "string",
+                            "description": "The email of the customer"
+                        },
+                        "phonenumber": {
+                            "type": "string",
+                            "description": "The phonenumber of the customer"
+                        },
+                        "date": {
+                            "type": "string",
+                            "description": "The current date"
+                        }
+                    },
+                    "required": ["firstname", "lastname", "email", "phonenumber", "date"]
                 }
-            },
-            "required": ["email", "menuid", "quantity", "address", "instruction", "date"]
-        }
-        }
-    },
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "create_new_complain",
+                "description": "Check if the user is an exisiting customer . If yes then take email and firstname , and complain else make a new customer and then file the complain",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "firstname": {
+                            "type": "string",
+                            "description": "The firstname of the customer making the complaint"
+                        },
 
-    {
-        "type": "function",
-        "function": {
-            "name": "create_new_complain",
-            "description": "Creates a new complaint for the customer . When customer asked to file a complain",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "firstname": {
-                        "type": "string",
-                        "description": "The firstname of the customer making the complaint"
+                        "email": {
+                            "type": "string",
+                            "description": "The email of the customer"
+                        },
+                        "date": {
+                            "type": "string",
+                            "description": "The date of the complaint"
+                        },
+                        "complain": {
+                            "type": "string",
+                            "description": "The text of the complaint"
+                        }
                     },
-                    
-                    "email": {
-                        "type": "string",
-                        "description": "The email of the customer"
+                    "required": ["firstname", "email", "date", "complain"]
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "create_new_order",
+                "description": "Check if the user is an exisiting customer . If yes then take email and firstname , and complain else make a new customer and then file the complain",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "type": "string",
+                            "description": "**Ask Customer to provide email** Note. (!! Dont write email from your side !!) . Check if the customer is already our member , if yes find out customer id , if no create a new customer by asking edtails from user."
+                        },
+
+                        "menuid": {
+                            "type": "integer",
+                            "description": "The id of the menu item selected be the customer . Dont ask customer for the id , ask for item name and find id yourself"
+                        },
+                        "quantity": {
+                            "type": "integer",
+                            "description": "The quantity of the menu item selected by the customer"
+                        },
+                        "address": {
+                            "type": "string",
+                            "description": "The address at which items should be delivered. Ask Customer to provide address** Note. (!! Dont write address from your side !!)"
+                        },
+                        "instruction": {
+                            "type": "string",
+                            "description": "The instruction of the menu item selected by the customer. Ask Customer to provide instructions** Note. (!! Dont write instructions from your side !!)"
+                        },
+                        "date": {
+                            "type": "string",
+                            "description": "The date of the complaint.Dont ask customer for the date . use current date."
+                        }
                     },
-                    "date": {
-                        "type": "string",
-                        "description": "The date of the complaint"
-                    },
-                    "complain": {
-                        "type": "string",
-                        "description": "The text of the complaint"
-                    }
-                },
-                "required": ["firstname", "email", "date", "complain"]
+                    "required": ["email", "menuid", "quantity", "address","instruction","date"]
+                }
             }
         }
-    }
 ]
 
 
@@ -257,7 +257,7 @@ This SOP will be reviewed every 6 months to ensure all procedures remain relevan
 Feedback from clients and staff will be taken into account to make necessary adjustments to enhance operational efficiency and service quality.
 This SOP should be followed by all staff members to ensure that Laziz Catering delivers consistent, high-quality services that exceed client expectations.""",
         tools=tools_object,  # Pass tools as an object
-        model="gpt-3.5-turbo"
+        model="gpt-4-turbo"
     )
     return {"assistant_id": assistant.id}
 
@@ -358,7 +358,7 @@ def chat_with_assistant(chat_request: Chat):
                             arguments['quantity'],
                             arguments['address'],
                             arguments['instruction'],
-                            arguments['date']
+                            arguments['date'],
                             
                         )
                         tool_outputs.append({

@@ -8,7 +8,7 @@ def create_new_order(email, menuid, quantity, address , instruction, date):
         "menuid": menuid,
         "quantity": quantity,
         "address": address,
-        "Instruction": instruction,
+        "instruction": instruction,
         "status": 'Placed',
         "date": date
         }
@@ -21,4 +21,3 @@ def create_new_order(email, menuid, quantity, address , instruction, date):
         return f"HTTP error: {err}"
     except Exception as e:
         return f"Error: {str(e)}"
-    
